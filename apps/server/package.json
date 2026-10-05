@@ -9,9 +9,11 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "@ai-sdk/groq": "^4.0.54",
     "@clerk/hono": "^0.1.84",
     "@hono/zod-validator": "^0.9.1",
     "@neondatabase/serverless": "^1.2.0",
+    "ai": "^7.0.127",
     "dotenv": "^18.0.5",
     "drizzle-orm": "^0.45.3",
     "hono": "^4.13.12",

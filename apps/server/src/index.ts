@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { clerkMiddleware } from "@clerk/hono";
-import test from "./routes/test";
+import chat from "./routes/chat";
 
 
 
@@ -21,7 +21,7 @@ const app = new Hono<{ Bindings: CloudflareBindings }>()
 		})(c, next);
 	})
 
-	.route("/test", test)
+	.route("/chat", chat)
 
 
 
