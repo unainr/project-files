@@ -1,4 +1,4 @@
-import { AppType } from "@workspace/server";
+import type { AppType } from "@workspace/server";
 import { hc } from "hono/client";
 
 

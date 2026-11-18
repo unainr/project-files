@@ -1,8 +1,27 @@
 {
   "name": "@tracelayer/sdk",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Lightweight telemetry SDK for TraceLayer AI observability",
   "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "observability",
+    "llm",
+    "ai",
+    "tracing",
+    "telemetry",
+    "openai",
+    "monitoring"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unainr/project-files.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://tracelayerio.vercel.app",
+  "bugs": {
+    "url": "https://github.com/unainr/project-files/issues"
+  },
   "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
