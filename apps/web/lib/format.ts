@@ -1,0 +1,2 @@
+export const formatDuration = (ms: number) => (ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${ms}ms`);
+export const formatTokens = (n: number | null | undefined) => (n == null ? "—" : n.toLocaleString());
