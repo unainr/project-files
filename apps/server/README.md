@@ -19,3 +19,4 @@ Pass the `CloudflareBindings` as generics when instantiating `Hono`:
 // src/index.ts
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 ```
+<!-- pnpm wrangler secret bulk .dev.vars -->

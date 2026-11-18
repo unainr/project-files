@@ -38,7 +38,7 @@ export const SignInButtonClerk = () => {
             asChild
             
           >
-            <Link href="/stats">Dashboard</Link>
+            <Link href="/projects">Dashboard</Link>
           </Button>
         </div>
       </Show>

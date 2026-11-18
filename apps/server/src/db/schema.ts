@@ -1,61 +1,76 @@
-import { pgTable, text, timestamp, integer, decimal, boolean, uuid, jsonb, index, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, pgEnum, text, integer, jsonb, timestamp, index } from "drizzle-orm/pg-core";
+import { newId } from "../lib/id";
 
+export const traceStatus = pgEnum("trace_status", ["success", "error"]);
 
+const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
 
-// -----------=========================
-export const composioSessions = pgTable("composio_sessions", {
-  // Clerk user ID — stable, use directly as Composio userId
-  userId:    text("user_id").primaryKey(),
-  sessionId: text("session_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const projects = pgTable(
+  "projects",
+  {
+    id: text("id").primaryKey().$defaultFn(newId.project),
+    userId: text("user_id").notNull(), // Clerk user id
+    name: text("name").notNull(),
+    createdAt: createdAt(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [index("projects_user_idx").on(t.userId)],
+);
 
-export const agents = pgTable("agents", {
-  id:          uuid("id").defaultRandom().primaryKey(),
-  userId:      text("user_id").notNull(),           // owner (Clerk userId)
-  name:        text("name").notNull(),
-  description: text("description"),
-  avatarUrl:   text("avatar_url"),                  // optional uploaded image URL       
-  createdAt:   timestamp("created_at").defaultNow().notNull(),
-  updatedAt:   timestamp("updated_at").defaultNow().notNull(),
-});
+export const projectApiKeys = pgTable(
+  "project_api_keys",
+  {
+    id: text("id").primaryKey().$defaultFn(newId.apiKey),
+    projectId: text("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    keyHash: text("key_hash").notNull().unique(),
+    keyPrefix: text("key_prefix").notNull(),
+    createdAt: createdAt(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  },
+  (t) => [index("api_keys_project_idx").on(t.projectId)],
+);
 
-export const chats = pgTable("chats", {
-  id: uuid("id").defaultRandom().primaryKey(),
-   agentId:   uuid("agent_id").references(() => agents.id, { onDelete: "cascade" }),
-  userId: text("user_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const traces = pgTable(
+  "traces",
+  {
+    id: text("id").primaryKey().$defaultFn(newId.trace),
+    projectId: text("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    status: traceStatus("status").notNull(),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+    duration: integer("duration").notNull(), // ms
+    createdAt: createdAt(),
+  },
+  (t) => [index("traces_project_started_idx").on(t.projectId, t.startedAt)],
+);
 
-
-
-
-
-
-export const chatMessages = pgTable("chat_messages", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
-  role: text("role").notNull(), // "user" | "assistant"
-  parts: jsonb("parts").notNull(), // store the full UIMessage.parts array (text + tool calls)
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-
-// keep this, it's fine
-export const userCredits = pgTable("user_credits", {
-  userId: text("user_id").primaryKey(),
-  credits: integer("credits").notNull().default(0), // start at 0, user buys credits
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-
-export const creditTransactions = pgTable("credit_transactions", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: text("user_id").notNull(),
-  type: text("type").notNull(), // "purchase" | "usage"
-  amount: integer("amount").notNull(),
-  description: text("description"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const spans = pgTable(
+  "spans",
+  {
+    id: text("id").primaryKey().$defaultFn(newId.span),
+    traceId: text("trace_id")
+      .notNull()
+      .references(() => traces.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    type: text("type").notNull().default("llm"),
+    status: traceStatus("status").notNull(),
+    model: text("model"),
+    input: text("input"),
+    output: text("output"),
+    inputTokens: integer("input_tokens"), // null = unknown (not 0)
+    outputTokens: integer("output_tokens"),
+    duration: integer("duration").notNull(),
+    error: text("error"),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("spans_trace_idx").on(t.traceId)],
+);

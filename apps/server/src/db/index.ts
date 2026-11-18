@@ -5,3 +5,5 @@ export const getDb = (databaseUrl: string) => {
   const sql = neon(databaseUrl)
   return drizzle(sql)
 }
+
+export type Db = ReturnType<typeof getDb>

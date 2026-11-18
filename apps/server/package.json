@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.54",
@@ -17,9 +18,11 @@
     "dotenv": "^18.0.5",
     "drizzle-orm": "^0.45.3",
     "hono": "^4.13.12",
+    "nanoid": "^6.0.2",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@tracelayer/sdk": "workspace:*",
     "drizzle-kit": "^0.31.11",
     "tsx": "^4.23.15",
     "wrangler": "^4.110.0"
