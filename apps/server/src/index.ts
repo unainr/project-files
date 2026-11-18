@@ -7,11 +7,9 @@ import apiKeys from "./routes/api-keys";
 import traces from "./routes/traces";
 import ingest from "./routes/ingest";
 
-
-
-
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 	.basePath("/api")
+	.route("/", ingest)
 	.use("*", async (c, next) => {
 		return cors({
 			origin: c.env.WEB_URL,
@@ -24,12 +22,10 @@ const app = new Hono<{ Bindings: CloudflareBindings }>()
 			secretKey: c.env.CLERK_SECRET_KEY,
 		})(c, next);
 	})
-  .route("/", ingest) // SDK ingestion: API-key auth, no Clerk
 	.route("/chat", chat)
-  .route("/projects", project)
-  .route("/api-keys", apiKeys)
-  .route("/traces", traces);
-
+	.route("/projects", project)
+	.route("/api-keys", apiKeys)
+	.route("/traces", traces);
 
 export default app;
 export type AppType = typeof app;
