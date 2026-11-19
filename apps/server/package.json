@@ -3,6 +3,11 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"types": "./dist/src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/src/index.d.ts"
+		}
+	},
 	"scripts": {
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy --minify",
@@ -11,18 +16,18 @@
 		"build": "tsc -p tsconfig.build.json"
 	},
 	"dependencies": {
-		"@ai-sdk/groq": "^4.0.54",
-		"@ai-sdk/provider": "4.0.21",
-		"@ai-sdk/provider-utils": "5.0.53",
-		"@clerk/hono": "^0.1.84",
+		"@ai-sdk/groq": "^4.0.85",
+		"@ai-sdk/provider": "4.0.39",
+		"@ai-sdk/provider-utils": "5.0.82",
+		"@clerk/hono": "^0.1.101",
 		"@hono/zod-validator": "^0.9.1",
-		"@neondatabase/serverless": "^1.2.0",
-		"ai": "^7.0.127",
-		"dotenv": "^18.0.5",
-		"drizzle-orm": "^0.45.3",
-		"hono": "^4.13.12",
+		"@neondatabase/serverless": "^1.2.1",
+		"ai": "^7.0.176",
+		"dotenv": "^18.0.10",
+		"drizzle-orm": "^0.45.4",
+		"hono": "^4.13.19",
 		"nanoid": "^6.0.2",
-		"zod": "^4.6.5"
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
 		"@tracelayer/sdk": "workspace:*",
@@ -30,6 +35,6 @@
 		"drizzle-kit": "^0.31.11",
 		"tsup": "^9.0.0",
 		"tsx": "^4.23.15",
-		"wrangler": "^4.110.0"
+		"wrangler": "^4.164.0"
 	}
 }
