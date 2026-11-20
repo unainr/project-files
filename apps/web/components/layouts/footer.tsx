@@ -1,71 +1,36 @@
 import Link from "next/link";
-import Logo from "./logo";
+import Logo from "@/components/layouts/logo";
 
-const COLUMNS = [
-  {
-    title: "Product",
-    links: [
-      { label: "Features", href: "#features" },
-      { label: "Integrations", href: "#integrations" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "FAQ", href: "#faq" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Contact", href: "mailto:hello@amanises.com" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy policy", href: "/privacy" },
-      { label: "Terms of service", href: "/terms" },
-    ],
-  },
-];
+const LINKS = [
+  { name: "Agent", href: "/agent" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Dashboard", href: "/projects" },
+] as const;
 
-export default function Footer() {
+export function LandingFooter() {
   return (
-    <footer className="border-border border-t bg-background px-4 pt-14 pb-8 text-foreground">
-      <div className="mx-auto max-w-5xl">
-        <div className="grid gap-10 md:grid-cols-[1.6fr_repeat(3,1fr)]">
-          <div className="max-w-xs space-y-4">
-           
-              <Logo />
-            
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              AI agents that chat with you and get real work done in Notion,
-              Slack, Gmail, Google Docs and more.
-            </p>
-          </div>
+    <footer className="border-t">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-4 py-8 sm:px-6 md:flex-row lg:px-8">
+        <Logo />
 
-          {COLUMNS.map((column) => (
-            <nav aria-label={column.title} key={column.title}>
-              <h3 className="mb-4 font-medium text-sm">{column.title}</h3>
-              <ul className="space-y-3">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                      href={link.href}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
+        <nav aria-label="Footer">
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="rounded text-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        <div className="mt-12 flex flex-col gap-2 border-border border-t pt-6 text-muted-foreground text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Amanises. All rights reserved.</p>
-          <p>Built for people who want their tools to work for them.</p>
-        </div>
+        <p className="text-xs text-muted-foreground">
+          © {new Date().getFullYear()} TraceLayer
+        </p>
       </div>
     </footer>
   );
