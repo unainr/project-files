@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SignInButtonClerk } from "../clerk-sign-button/Sign-in-button";
 
@@ -19,51 +19,62 @@ const menuItems = [
 export function MainHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const drawerId = useId();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <>
-      {/* Floating dock — detached pill, centered, not full-width */}
+      {/* Floating dock: detached pill, centered, not full-width */}
       <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
         <div
           className={cn(
-            "flex h-14 items-center gap-1 rounded-full",
-            "bg-background/70 px-2 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.25)] backdrop-blur-xl",
+            "flex h-14 items-center gap-1 rounded-full border border-border/60",
+            "bg-background/70 px-2.5 shadow-lg shadow-black/10 backdrop-blur-xl",
             "supports-backdrop-filter:bg-background/60",
           )}
         >
           {/* Logo */}
-          <div className="mx-1.5 flex items-center justify-center">
+          <div className="ml-1 mr-1.5 flex items-center justify-center">
             <Logo />
           </div>
 
-          <div className="mx-1 h-6 w-px bg-border/70" />
+          <div className="mx-1 hidden h-6 w-px bg-border/70 lg:block" />
 
           {/* Desktop links */}
-          <ul className="hidden items-center gap-1 lg:flex">
-            {menuItems.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "relative flex h-10 items-center rounded-full px-4 text-sm font-medium transition-colors duration-150",
-                      active
-                        ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <nav aria-label="Main" className="hidden lg:block">
+            <ul className="flex items-center gap-1">
+              {menuItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "relative flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium outline-none transition-colors duration-150",
+                        "focus-visible:ring-2 focus-visible:ring-ring",
+                        active
+                          ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
+                          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                      )}
+                    >
+                      {active && (
+                        <span
+                          aria-hidden="true"
+                          className="size-1.5 rounded-full bg-violet-500"
+                        />
+                      )}
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-          <div className="mx-1 hidden h-6 w-px bg-border/70 sm:block" />
+          <div className="mx-1 h-6 w-px bg-border/70" />
 
           {/* Theme switcher */}
           <div className="flex items-center justify-center">
@@ -80,18 +91,20 @@ export function MainHeader() {
           {/* Mobile toggle */}
           <div className="flex items-center justify-center lg:hidden">
             <button
+              type="button"
               onClick={() => setMenuOpen((v) => !v)}
               className={cn(
-                "flex h-9.5 w-9.5 items-center justify-center rounded-full text-muted-foreground transition-colors",
-                "hover:text-foreground",
+                "flex h-9.5 w-9.5 items-center justify-center rounded-full text-muted-foreground outline-none transition-colors",
+                "hover:bg-muted/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
               )}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
+              aria-controls={drawerId}
             >
               {menuOpen ? (
-                <XIcon className="size-4.5" />
+                <XIcon className="size-4.5" aria-hidden="true" />
               ) : (
-                <MenuIcon className="size-4.5" />
+                <MenuIcon className="size-4.5" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -103,32 +116,44 @@ export function MainHeader() {
 
       {/* Mobile drawer */}
       <div
+        id={drawerId}
         className={cn(
-          "fixed inset-x-4 top-20 z-40 overflow-hidden rounded-3xl bg-background/95 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-[max-height,opacity] duration-200 lg:hidden",
-          menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+          "fixed inset-x-4 top-20 z-40 overflow-hidden rounded-3xl border border-border/60 bg-background/95 shadow-lg shadow-black/10 backdrop-blur-xl",
+          "transition-[max-height,opacity,visibility] duration-200 motion-reduce:transition-none lg:hidden",
+          menuOpen
+            ? "visible max-h-96 opacity-100"
+            : "invisible max-h-0 opacity-0",
         )}
       >
-        <nav className="flex flex-col gap-1 p-4">
+        <nav aria-label="Mobile" className="flex flex-col gap-1 p-3">
           {menuItems.map((item) => {
             const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? "page" : undefined}
                 onClick={() => setMenuOpen(false)}
                 className={cn(
-                  "rounded-full px-3.5 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-medium outline-none transition-colors",
+                  "focus-visible:ring-2 focus-visible:ring-ring",
                   active
                     ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
                 {item.name}
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="size-1.5 rounded-full bg-violet-500"
+                  />
+                )}
               </Link>
             );
           })}
 
-          <div className="mt-3 flex gap-4 border-t border-border pt-3">
+          <div className="mt-2 flex items-center gap-4 border-t border-border px-1 pt-3">
             <SignInButtonClerk />
           </div>
         </nav>
