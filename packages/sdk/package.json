@@ -1,6 +1,6 @@
 {
   "name": "@tracelayer/sdk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Lightweight telemetry SDK for TraceLayer AI observability",
   "type": "module",
   "license": "MIT",

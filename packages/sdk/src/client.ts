@@ -2,7 +2,7 @@ import { Span } from "./trace";
 import { Transport } from "./transport";
 import type { TraceLayerOptions, TracePayload, TraceStatus } from "./types";
 
-const DEFAULT_BASE_URL = "https://server.unainraza7.workers.dev"; // TODO: your deployed API URL
+const DEFAULT_BASE_URL = "https://server.unainraza7.workers.dev/api"; // TODO: your deployed API URL
 const DEFAULT_TIMEOUT_MS = 3000;
 // Server accepts 100k chars; staying under it means we never get rejected for size.
 const MAX_TEXT_LENGTH = 50_000;
