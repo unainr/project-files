@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThemeSwitcher } from "@/components/theme/mode-toggle";
 import { useProjects } from "@/hooks/use-projects";
+import Logo from "./logo";
 
 const PROJECT_NAV = [
   { label: "Overview", path: "", icon: LayoutDashboard },
@@ -47,15 +48,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-4 pb-3">
-        <Link
-          href="/projects"
-          className="flex items-center gap-2.5 font-semibold text-base group"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Layers className="h-4 w-4" />
-          </div>
-          <span className="tracking-tight">TraceLayer</span>
-        </Link>
+        <Logo/>
       </SidebarHeader>
 
       <SidebarSeparator />

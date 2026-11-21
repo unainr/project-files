@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import Logo from "./logo";
 
 const menuItems = [
-  { name: "Agent", href: "/agent" },
+  { name: "Home", href: "/" },
   { name: "Pricing", href: "/pricing" },
 ];
 

@@ -2,8 +2,11 @@ import { TypeLayout } from "@/types";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layouts/app-sidebar";
 import { Separator } from "@/components/ui/separator";
-
-const Layout = ({ children }: TypeLayout) => {
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+const Layout = async ({ children }: TypeLayout) => {
+  	const { userId } = await auth();
+	if (!userId) redirect("/sign-in");
   return (
     <SidebarProvider>
       <AppSidebar />
